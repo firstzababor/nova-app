@@ -899,12 +899,13 @@ section.enter > .stage,section.enter > .hero{animation:none}
   const newFall = far => ({a: R()*TAU, d: M*(far ? .75 + R()*.55 : .12 + R()*1.1), c: tints[(R()*tints.length)|0], s: .5 + R()*1.1});
   function size(){
     const dpr = Math.min(window.devicePixelRatio || 1, 1.25);
-    W = innerWidth; H = innerHeight; M = Math.hypot(W, H)*.6;
+    W = cv.clientWidth || innerWidth; H = cv.clientHeight || innerHeight; M = Math.hypot(W, H)*.6;
     cv.width = Math.round(W*dpr); cv.height = Math.round(H*dpr); g.setTransform(dpr, 0, 0, dpr, 0, 0);
-    dust = Array.from({length: Math.round(Math.min(220, W*H/4200))}, () => ({a: R()*TAU, d: M*(.05 + Math.sqrt(R())*1.25), r: R()*1 + .55, al: R()*.45 + .4, tw: R()*TAU, c: tints[(R()*tints.length)|0]}));
+    const nd = Math.round(Math.min(220, W*H/4200));
+    if (!dust.length || Math.abs(nd - dust.length) > nd*.3) dust = Array.from({length: nd}, () => ({a: R()*TAU, d: M*(.05 + Math.sqrt(R())*1.25), r: R()*1 + .55, al: R()*.45 + .4, tw: R()*TAU, c: tints[(R()*tints.length)|0]}));
     const n = Math.round(Math.min(80, 36 + W*H/9000));
     while (fall.length < n) fall.push(newFall(false)); fall.length = n;
-    aim(true);
+    aim(!snapped);
   }
   function aim(snap){
     let x = W/2, y = H*.16, r = Math.min(W, H)*.2;
@@ -929,6 +930,7 @@ section.enter > .stage,section.enter > .hero{animation:none}
   }
   function draw(dt){
     aim(false);
+    if (cv.clientWidth !== W || cv.clientHeight !== H){ size(); aim(false); }
     const ease = 1 - Math.exp(-dt*4.5);
     bh.x += (tgt.x - bh.x)*ease; bh.y += (tgt.y - bh.y)*ease; bh.r += (tgt.r - bh.r)*ease;
     if (Math.abs(tgt.x - bh.x) < .3 && Math.abs(tgt.y - bh.y) < .3 && Math.abs(tgt.r - bh.r) < .3){ bh.x = tgt.x; bh.y = tgt.y; bh.r = tgt.r; }
