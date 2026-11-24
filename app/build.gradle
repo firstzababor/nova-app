@@ -6,8 +6,8 @@ android {
         applicationId 'app.nova.reader'
         minSdk 24
         targetSdk 34
-        versionCode 3
-        versionName '1.2'
+        versionCode 4
+        versionName '1.3'
     }
     signingConfigs { nova { storeFile file('nova.keystore'); storePassword 'novaread'; keyAlias 'nova'; keyPassword 'novaread' } }
     buildTypes { release { minifyEnabled false; signingConfig signingConfigs.nova } }
