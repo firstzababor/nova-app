@@ -1,0 +1,15 @@
+plugins { id 'com.android.application' }
+android {
+    namespace 'app.nova.reader'
+    compileSdk 34
+    defaultConfig {
+        applicationId 'app.nova.reader'
+        minSdk 24
+        targetSdk 34
+        versionCode 1
+        versionName '1.0'
+    }
+    signingConfigs { nova { storeFile file('nova.keystore'); storePassword 'novaread'; keyAlias 'nova'; keyPassword 'novaread' } }
+    buildTypes { release { minifyEnabled false; signingConfig signingConfigs.nova } }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+}
