@@ -623,6 +623,8 @@ svg .ax,svg .xl{font-size:11.5px}
 .live,.pill{font-weight:300;letter-spacing:.02em}
 .pill b{font-weight:400}
 body{text-rendering:optimizeLegibility;-moz-osx-font-smoothing:grayscale}
+/* the black hole follows these, so they must not slide */
+section.enter > .stage,section.enter > .hero{animation:none}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 
@@ -927,8 +929,9 @@ body{text-rendering:optimizeLegibility;-moz-osx-font-smoothing:grayscale}
   }
   function draw(dt){
     aim(false);
-    const ease = Math.min(1, dt*4);
+    const ease = 1 - Math.exp(-dt*4.5);
     bh.x += (tgt.x - bh.x)*ease; bh.y += (tgt.y - bh.y)*ease; bh.r += (tgt.r - bh.r)*ease;
+    if (Math.abs(tgt.x - bh.x) < .3 && Math.abs(tgt.y - bh.y) < .3 && Math.abs(tgt.r - bh.r) < .3){ bh.x = tgt.x; bh.y = tgt.y; bh.r = tgt.r; }
     const near = 1 + .05*(1 - Math.exp(-life/240)) + .008*Math.sin(t*.35);
     const r = bh.r*near, X = bh.x, Y = bh.y;
     let boost = 1;
@@ -1584,7 +1587,7 @@ function showTab(t){
   requestAnimationFrame(() => window.spaceAnchor && (t === "stats" ? window.spaceAnchor($("statStage"), .36) : t === "cal" ? window.spaceAnchor($("calStage"), .26) : window.spaceAnchor($("tRing"), .74)));
 }
 $("tabToday").onclick = () => { tap(); showTab("today"); };
-$("tabStats").onclick = () => { tap(); renderStats(); showTab("stats"); };
+$("tabStats").onclick = () => { tap(); showTab("stats"); (window.requestIdleCallback || (f => setTimeout(f, 1200)))(() => renderStats(), {timeout: 2500}); };
 
 function renderAll(){ renderToday(); renderCal(); renderStats(); }
 
